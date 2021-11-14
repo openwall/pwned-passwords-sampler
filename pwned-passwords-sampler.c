@@ -16,6 +16,7 @@
 #include <stdlib.h>
 #include <assert.h>
 
+#define HEX 32 /* 32 hex digits is right for NTLM */
 #define MAXI 3650716681ULL /* exact figure for HIBP v7 */
 #define SAMPLE 1000000
 
@@ -44,14 +45,14 @@ int main(void) {
 	const char *pp = p;
 	uint64_t *ip = i2o;
 	unsigned long long total = 0;
-	while (pp + 36 <= p + st.st_size) {
-		if (pp[32] != ':') {
+	while (pp + (HEX + 4) <= p + st.st_size) {
+		if (pp[HEX] != ':') {
 bad_file:
 			fprintf(stderr, "\rInput file format error\n");
 			return 1;
 		}
 		char *e;
-		unsigned long c = strtoul(pp + 33, &e, 10);
+		unsigned long c = strtoul(pp + (HEX + 1), &e, 10);
 		if (e[0] != '\r' || e[1] != '\n' || c < 1)
 			goto bad_file;
 		if ((total ^ (total + c)) & 0x1000000)
