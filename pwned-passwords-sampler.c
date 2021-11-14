@@ -92,9 +92,10 @@ bad_file:
 		if (read(rfd, &rnd, sizeof(rnd)) != sizeof(rnd))
 			continue;
 		rnd &= mask;
-		if (rnd >= total)
+		if (rnd >= total || i2o[rnd] == 1)
 			continue;
 		pp = p + i2o[rnd];
+		i2o[rnd] = 1; /* taken */
 		while (*pp != '\r')
 			putchar(*pp++);
 		putchar('\n');
