@@ -45,8 +45,6 @@ int main(void) {
 	uint64_t *ip = i2o;
 	unsigned long long total = 0;
 	while (pp + 36 <= p + st.st_size) {
-		if (!((ip - i2o) & 0xffffff))
-			fprintf(stderr, "\r%.0f%%", 100. * (pp - p) / st.st_size);
 		if (pp[32] != ':') {
 bad_file:
 			fprintf(stderr, "\rInput file format error\n");
@@ -56,6 +54,8 @@ bad_file:
 		unsigned long c = strtoul(pp + 33, &e, 10);
 		if (e[0] != '\r' || e[1] != '\n' || c < 1)
 			goto bad_file;
+		if ((total ^ (total + c)) & 0x1000000)
+			fprintf(stderr, "\r%.1f%%", 100. * (pp - p) / st.st_size);
 		total += c;
 		if (total > MAXI) {
 			fprintf(stderr, "\rTotal exceeds allocation\n");
@@ -65,6 +65,7 @@ bad_file:
 			*ip++ = pp - p;
 		pp = e + 2;
 	}
+	assert(total == ip - i2o);
 	if (pp != p + st.st_size)
 		goto bad_file;
 	fprintf(stderr, "\rTotal %llu\n", total);
