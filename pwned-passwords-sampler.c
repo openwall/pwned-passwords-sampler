@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 by Solar Designer
+ * Copyright (c) 2021,2022 by Solar Designer
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted.
@@ -17,7 +17,7 @@
 #include <assert.h>
 
 #define HEX 32 /* 32 hex digits is right for NTLM */
-#define MAXI 3650716681ULL /* exact figure for HIBP v7 */
+#define MAXI 5579399834ULL /* exact figure for HIBP v8, any larger will do */
 #define SAMPLE 1000000
 
 int main(void) {
